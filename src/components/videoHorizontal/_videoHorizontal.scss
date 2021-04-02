@@ -12,6 +12,11 @@
     &__thumbnail{
         width: 100%;
 
+        &-channel{
+            width: 50%;
+            border-radius: 50%;
+        }
+
         &-wrapper{
             width: 100%;
         }
@@ -33,6 +38,9 @@
         color: white;
         letter-spacing: 0.1px;
         @include line-clamp(1);
+    }
+    &__desc{
+        @include line-clamp(2);
     }
     &__channel{
         img{

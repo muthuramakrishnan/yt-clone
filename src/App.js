@@ -8,8 +8,11 @@ import Sidebar from './components/sidebar/Sidebar';
 import HomeScreen from './screens/homescreen/HomeScreen';
 import LoginScreen from './screens/loginScreen/LoginScreen';
 import WatchScreen from './screens/watchScreen/WatchScreen';
+import SearchScreen from './screens/searchScreen/SearchScreen';
 
 import './_app.scss';
+import Subscriptions from './screens/subscriptions/Subscriptions';
+import ChannelScreen from './screens/channelScreen/ChannelScreen';
 
 
 const Layout = ({children}) => {
@@ -57,14 +60,24 @@ const App = () => {
                 <Route path="/auth" exact>
                     <LoginScreen/>
                 </Route>
-                <Route path="/search" exact>
+                <Route path="/search/:query" exact>
                     <Layout>
-                        <h1>Search Results</h1>
+                        <SearchScreen/>
                     </Layout>
                 </Route>
                 <Route path="/watch/:id" exact>
                     <Layout>
                         <WatchScreen/>
+                    </Layout>
+                </Route>
+                <Route path="/feed/subscriptions" exact>
+                    <Layout>
+                        <Subscriptions/>
+                    </Layout>
+                </Route>
+                <Route path="/channel/:channelId" exact>
+                    <Layout>
+                        <ChannelScreen/>
                     </Layout>
                 </Route>
 

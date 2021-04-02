@@ -1,4 +1,4 @@
-import { HOME_VIDEOS_FAIL, HOME_VIDEOS_REQUEST, HOME_VIDEOS_SUCCESS, RELATED_VIDEO_FAIL, RELATED_VIDEO_REQUEST, RELATED_VIDEO_SUCCESS, SELECTED_VIDEO_FAIL, SELECTED_VIDEO_REQUEST, SELECTED_VIDEO_SUCCESS } from "../actionType";
+import { CHANNEL_VIDEOS_FAIL, CHANNEL_VIDEOS_REQUEST, CHANNEL_VIDEOS_SUCCESS, HOME_VIDEOS_FAIL, HOME_VIDEOS_REQUEST, HOME_VIDEOS_SUCCESS, RELATED_VIDEO_FAIL, RELATED_VIDEO_REQUEST, RELATED_VIDEO_SUCCESS, SEARCH_VIDEO_FAIL, SEARCH_VIDEO_REQUEST, SEARCH_VIDEO_SUCCESS, SELECTED_VIDEO_FAIL, SELECTED_VIDEO_REQUEST, SELECTED_VIDEO_SUCCESS, SUBSCRIPTIONS_CHANNEL_FAIL, SUBSCRIPTIONS_CHANNEL_REQUEST, SUBSCRIPTIONS_CHANNEL_SUCCESS } from "../actionType";
 import request from '../../api';
 
 export const getPopularVideos = () => async (dispatch, getState) => {
@@ -97,5 +97,85 @@ export const getRelatedVideos = (id) => async (dispatch) => {
         console.error(error.response.data.message);
 
         dispatch({type:RELATED_VIDEO_FAIL, payload: error.response.data.message});
+    }
+}
+
+export const getVideosBySearch = (keyword) => async (dispatch, getState) => {
+    try{
+
+        dispatch({type: SEARCH_VIDEO_REQUEST});
+        const {data} = await request.get('/search',{
+            params: {
+                part: 'snippet',
+                maxResults: 20,
+                q: keyword,
+                type: 'video,channel' /*if u don't give type, this api would return the playlist*/
+            }
+        });
+        
+        dispatch({type: SEARCH_VIDEO_SUCCESS, payload: data.items})
+
+    }
+    catch(error){
+        console.error(error.message);
+        dispatch({type: SEARCH_VIDEO_FAIL, payload: error.message});
+    }
+}
+
+export const getSubscribedChannel = id => async (dispatch, getState) => {
+    try{
+
+        dispatch({type: SUBSCRIPTIONS_CHANNEL_REQUEST});
+
+        const { data } = await request('/subscriptions', {
+            params: {
+                part: 'snippet,contentDetails',
+                mine: true
+            },
+            headers:{
+                Authorization: `Bearer ${getState().auth.accessToken}`
+            }
+        });
+
+        dispatch({type: SUBSCRIPTIONS_CHANNEL_SUCCESS, payload: data.items})
+
+    }
+    catch(error){
+        console.error(error.response.data);
+        dispatch({type: SUBSCRIPTIONS_CHANNEL_FAIL, payload: error.response.data});
+    }
+}
+
+export const getVideosByChannel = id => async (dispatch) => {
+    try{
+
+        dispatch({type: CHANNEL_VIDEOS_REQUEST});
+
+        //GET UPLOAD PLAYLIST ID
+        const { data: {items} } = await request('/channels', {
+            params: {
+                part: 'contentDetails',
+                id: id
+            }
+        });
+
+        const uploadPlaylistId = items[0].contentDetails.relatedPlaylists.uploads;
+
+        //GET THE VIDEOS USING ID
+        const { data } = await request('/playlistItems', {
+            params: {
+                part: 'contentDetails,snippet',
+                playlistId: uploadPlaylistId,
+                maxResults: 30
+            }
+        });
+
+
+        dispatch({type: CHANNEL_VIDEOS_SUCCESS, payload: data.items})
+
+    }
+    catch(error){
+        console.error(error.response.data);
+        dispatch({type: CHANNEL_VIDEOS_FAIL, payload: error.response.data});
     }
 }

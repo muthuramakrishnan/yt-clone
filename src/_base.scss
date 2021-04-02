@@ -14,6 +14,10 @@ $breakpoint-small: 520px;
     padding: 0;
     box-sizing: border-box;
 }
+a, a:hover{
+    color: $text-color;
+    text-decoration: none;
+}
 
 body{
     background: $black-primary;

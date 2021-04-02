@@ -23,6 +23,8 @@ const WatchScreen = () => {
 
     return (
         <Row>
+
+            {/* main screen with videos and comments section */}
             <Col lg={8}>
                 <div className="watchScreen__player">
                     <iframe src={`https://www.youtube.com/embed/${id}` }frameBorder="0" title={video?.snippet?.title} allowFullScreen width='100%' height='100%'></iframe>
@@ -34,6 +36,8 @@ const WatchScreen = () => {
                 }
                 <Comments videoId = {id} totalComments = {video?.statistics?.commentCount}/>
             </Col>
+
+            {/* right sidebar with related videos */}
             <Col lg={4}>
                 {
                     !loading && videos?.filter(video=>video.snippet).map((video)=>(
