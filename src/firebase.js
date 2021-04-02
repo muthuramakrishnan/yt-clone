@@ -12,7 +12,7 @@ import 'firebase/auth';
 //   };
 
   const firebaseConfig = {
-    apiKey: "AIzaSyCgvjEIef8Dc6IHaew-wmxlf8bg9P2g8OQ",
+    apiKey: process.env.REACT_APP_YOUTUBE_API_KEY,
     authDomain: "clone-46af5.firebaseapp.com",
     projectId: "clone-46af5",
     storageBucket: "clone-46af5.appspot.com",
